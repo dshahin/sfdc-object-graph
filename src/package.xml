@@ -9,5 +9,9 @@
         <members>ObjectGraph</members>
         <name>ApexPage</name>
     </types>
+    <types>
+        <members>vizjs</members>
+        <name>StaticResource</name>
+    </types>
     <version>29.0</version>
 </Package>
