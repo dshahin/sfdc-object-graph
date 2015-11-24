@@ -1,0 +1,93 @@
+<apex:page showHeader="false" sidebar="false" controller="ObjectGraphCTRL">
+    <h1>object graph</h1>
+    <style type="text/css">
+    #mySchema {
+      width: 100%;
+      height: 1000px;
+      border: 1px solid lightgray;
+    }
+  </style>
+    <div id="mySchema"></div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.css"></link>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.9.0/vis.min.js"></script>
+    <script type="text/javascript">
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.ObjectGraphCTRL.getSchema}',
+        function(schema,event){
+
+            var len = schema.edges.length;
+            for(var i=0;i<len;i++){
+                var edge = schema.edges[i];
+                edge.from = edge.fro;
+                delete edge.fro;
+            }
+
+            // create an array with nodes
+              var nodes = new vis.DataSet(schema.nodes);
+
+              // create an array with edges
+              var edges = new vis.DataSet(schema.edges);
+
+              // create a network
+              var container = document.getElementById('mySchema');
+              var data = {
+                "nodes": nodes,
+                "edges": edges
+              };
+              var options = {
+                  "configure" : {
+                    "showButton" : true
+                  },
+                  "nodes": {
+                    "borderWidth": 2,
+                    "color": {
+                      "highlight": {
+                        "background": "rgba(255,119,51,1)"
+                      }
+                    },
+                    "font": {
+                      "size": 52
+                    },
+                    "shape": "ellipse"
+                  },
+                  "edges": {
+                    "arrows": {
+                      "to": {
+                        "enabled": true,
+                        "scaleFactor": 3
+                      }
+                    },
+                    "color": {
+                      "highlight": "rgba(209,105,50,1)",
+                      "inherit": false
+                    },
+                    "font": {
+                      "strokeWidth": 27
+                    },
+                    "physics": false,
+                    "scaling": {
+                      "min": 48,
+                      "max": 66
+                    },
+                    "smooth": false
+                  },
+                  "physics": {
+                    "barnesHut": {
+                      "gravitationalConstant": -30000,
+                      "avoidOverlap": 1
+                    },
+                    "minVelocity": 0.75
+                  },
+                  "layout":{
+                    improvedLayout : false
+                  }
+                };
+              var network = new vis.Network(container, data, options);
+        }
+    );
+
+
+
+    </script>
+
+</apex:page>
