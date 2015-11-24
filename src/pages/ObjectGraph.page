@@ -9,7 +9,7 @@
         }
         </style>
 
-        <div id="mySchema"></div>
+        <div id="mySchema">LOADING</div>
 
         <apex:stylesheet value="{!URLFOR($Resource.vizjs, 'vis.min.css')}"/>
     </head>
@@ -21,74 +21,87 @@
         '{!$RemoteAction.ObjectGraphCTRL.getSchema}',
         function(schema,event){
 
-            var len = schema.edges.length;
-            for(var i=0;i<len;i++){
+            var number_of_edges = schema.edges.length;
+            for(var i=0;i<number_of_edges;i++){
                 var edge = schema.edges[i];
                 edge.from = edge.fro;
                 delete edge.fro;
             }
 
+            var number_of_nodes = schema.nodes.length;
+            for(var i=0;i<number_of_nodes;i++){
+                var node = schema.nodes[i];
+                node.group = node.obj_group;
+                delete node.obj_group;
+            }
+
+            console.log(schema);
+
             // create an array with nodes
-              var nodes = new vis.DataSet(schema.nodes);
+            var nodes = new vis.DataSet(schema.nodes);
 
-              // create an array with edges
-              var edges = new vis.DataSet(schema.edges);
+            // create an array with edges
+            var edges = new vis.DataSet(schema.edges);
 
-              // create a network
-              var container = document.getElementById('mySchema');
-              var data = {
+            // create a network
+            var container = document.getElementById('mySchema');
+            var data = {
                 "nodes": nodes,
                 "edges": edges
-              };
-              var options = {
-                  "configure" : {
-                    "showButton" : true
-                  },
-                  "nodes": {
-                    "borderWidth": 2,
-                    "color": {
-                      "highlight": {
-                        "background": "rgba(255,119,51,1)"
-                      }
-                    },
-                    "font": {
-                      "size": 52
-                    },
-                    "shape": "ellipse"
-                  },
-                  "edges": {
-                    "arrows": {
-                      "to": {
-                        "enabled": true,
-                        "scaleFactor": 3
-                      }
-                    },
-                    "color": {
-                      "highlight": "rgba(209,105,50,1)",
-                      "inherit": false
-                    },
-                    "font": {
-                      "strokeWidth": 27
-                    },
-                    "physics": false,
-                    "scaling": {
-                      "min": 48,
-                      "max": 66
-                    },
-                    "smooth": false
-                  },
-                  "physics": {
-                    "barnesHut": {
-                      "gravitationalConstant": -30000,
-                      "avoidOverlap": 1
-                    },
-                    "minVelocity": 0.75
-                  },
-                  "layout":{
-                    improvedLayout : false
+            };
+            var options = {
+              "configure" : {
+                "showButton" : true
+              },
+              "nodes": {
+                "borderWidth": 2,
+                "color": {
+                  "highlight": {
+                    "background": "rgba(255,119,51,1)"
                   }
-                };
-              var network = new vis.Network(container, data, options);
+                },
+                "font": {
+                  "size": 52
+                },
+                "shape": "ellipse"
+              },
+              "edges": {
+                "arrows": {
+                  "to": {
+                    "enabled": true,
+                    "scaleFactor": 3
+                  }
+                },
+                "color": {
+                  "highlight": "rgba(209,105,50,1)",
+                  "inherit": true
+                },
+                "font": {
+                  "strokeWidth": 27
+                },
+                "physics": false,
+                "scaling": {
+                  "min": 48,
+                  "max": 66
+                },
+                "width": 4,
+                "smooth": false
+              },
+              "physics": {
+                "barnesHut": {
+                  "gravitationalConstant": -30000,
+                  "avoidOverlap": 1
+                },
+                "minVelocity": 0.75
+              },
+              "layout":{
+                improvedLayout : false
+              },
+              "interaction":{
+                "hover":true
+              }
+            };
+            var network = new vis.Network(container, data, options);
         }
     );
 

@@ -9,7 +9,13 @@ public with sharing class ObjectGraphSVC {
 
         for(Schema.SObjectType ot: gd){
             Schema.DescribeSObjectResult parent = ot.getDescribe();
-            scheme.nodes.add(new node(parent.getName(),parent.getLabel()));
+            node n = new node(parent.getName(),parent.getLabel());
+            if(n.id.endsWith('__c')){
+                n.obj_group = 'custom';
+            }else{
+                n.obj_group = 'standard';
+            }
+            scheme.nodes.add(n);
 
             for(Schema.ChildRelationship cr: ot.getDescribe().getChildRelationships() ){
                 //system.debug(cr);
@@ -33,6 +39,7 @@ public with sharing class ObjectGraphSVC {
     public class node{
         public String label {get;set;}
         public String id {get;set;}
+        public String obj_group {get;set;}
         public node(string id, string label){
             this.id = id;
             this.label = label;
